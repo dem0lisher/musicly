@@ -12,6 +12,7 @@ export default class App extends Component {
     super(props);
     this.state = {searchString: '', artistData: [], noResults: false, currentPage: 1, pageSize: 10};
     this.updateSearchString = this.updateSearchString.bind(this);
+    this.submitSearch = this.submitSearch.bind(this);
     this.changePage = this.changePage.bind(this);
     this.getArtistData = this.getArtistData.bind(this);
     this.populateArtistData = this.populateArtistData.bind(this);
@@ -20,6 +21,12 @@ export default class App extends Component {
   updateSearchString(e){
     var searchString = e.currentTarget.value;
     this.setState({ searchString: searchString });
+  }
+
+  submitSearch(e){
+    if(e.which === 13){
+      this.getArtistData();
+    }
   }
 
   changePage(page){
@@ -54,7 +61,7 @@ export default class App extends Component {
       var artistData = [];
       var endValue = (this.state.currentPage*10) < this.state.artistData.length ? (this.state.currentPage*10) : this.state.artistData.length;
       for(var i=(this.state.currentPage-1)*10;i < endValue;i++){
-        artistData.push(<ArtistItem data={this.state.artistData[i]} />);
+        artistData.push(<ArtistItem data={this.state.artistData[i]} key={this.state.artistData[i].idArtist} />);
       }
       return(
         <div id="artists-container" className="flex-column">
@@ -70,7 +77,13 @@ export default class App extends Component {
         </div>
       );
     }
-    return;
+    else{
+      return(
+        <div className="flex-row flex-center">
+          <img src="music_all.jpg" id="home-bg-img" alt="Home Background" />
+        </div>
+      );
+    }
   }
 
   render() {
@@ -79,7 +92,7 @@ export default class App extends Component {
         <header id="header" className="flex-column">
           <h1 id="title">Musicly</h1>
           <div id="search-bar-container" className="flex-row flex-center">
-            <input type="search" id="search-bar" placeholder="Search for artists" value={this.state.searchString} onChange={this.updateSearchString} />
+            <input type="search" id="search-bar" placeholder="Search for artists" value={this.state.searchString} onKeyPress={this.submitSearch} onChange={this.updateSearchString} />
             <button type="button" id="search-btn" onClick={this.getArtistData}><img src="search.svg" alt="Search Icon" height="16px" width="16px" /></button>
           </div>
         </header>

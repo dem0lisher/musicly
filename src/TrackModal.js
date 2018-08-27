@@ -64,7 +64,7 @@ export default class TrackModal extends Component {
 		var trackData = [];
 		for(var i=0;i < this.state.trackData.length;i++){
 			trackData.push(
-				<div className="track-item flex-row">
+				<div className="track-item flex-row" key={this.state.trackData[i].idTrack}>
 					<div className="track-name">{this.state.trackData[i].strTrack}</div>
 					{this.getTrackDuration(this.state.trackData[i].intDuration)}
 				</div>

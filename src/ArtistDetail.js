@@ -60,7 +60,7 @@ export default class ArtistDetail extends Component {
 			var albumData = [];
 			var endValue = (this.state.currentPage*10) < this.state.albumData.length ? (this.state.currentPage*10) : this.state.albumData.length;
 			for(var i=(this.state.currentPage-1)*10;i < endValue;i++){
-				albumData.push(<AlbumItem data={this.state.albumData[i]} />);
+				albumData.push(<AlbumItem data={this.state.albumData[i]} key={this.state.albumData[i].idAlbum} />);
 			}
 			return(
 				<div id="album-data-cont">

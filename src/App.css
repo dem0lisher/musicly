@@ -24,6 +24,10 @@
   height: 38px;
   padding: 10px 25px;
 }
+#home-bg-img{
+  width: 40%;
+  padding: 50px 0 0 0;
+}
 #artists-container{
   margin: 60px 0;
   width: 60%;
