@@ -84,3 +84,9 @@
 .rc-pagination-item-active:hover a{
   color: #fff !important;
 }
+#no-results-cont{
+  font-size: 30px;
+  font-weight: bold;
+  padding: 100px 0 0 0;
+  text-align: center;
+}

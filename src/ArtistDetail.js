@@ -19,7 +19,26 @@ export default class ArtistDetail extends Component {
 	}
 
 	componentDidMount(){
-		this.setState({ artistData: this.props.location.state.artistData });
+		if(this.props.location.state && this.props.location.state.artistData){
+			this.setState({ artistData: this.props.location.state.artistData });
+		}
+		else{
+      $('#loader').removeClass('hidden');
+		 	$.ajax({
+        url: 'https://www.theaudiodb.com/api/v1/json/1/search.php',
+        type: 'GET',
+        data: {s: this.props.match.params.artist},
+        crossOrigin: true
+      }).then((data) => {
+          $('#loader').addClass('hidden');
+          if(data.artists){
+            this.setState({ artistData: data.artists[0] });
+          }
+          else{
+            this.setState({ artistData: '' });
+          }
+        });
+		}
     $('#loader').removeClass('hidden');
 		$.ajax({
 			url: 'https://www.theaudiodb.com/api/v1/json/1/searchalbum.php',

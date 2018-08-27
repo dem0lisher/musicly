@@ -6,18 +6,39 @@ export default class TrackModal extends Component {
 	constructor(props){
 		super(props);
 		this.state = {albumData: '', trackData: []};
+		this.getAlbumTracks = this.getAlbumTracks.bind(this);
 		this.closeModal = this.closeModal.bind(this);
 		this.getTrackDuration = this.getTrackDuration.bind(this);
 		this.populateTracks = this.populateTracks.bind(this);
 	}
 
 	componentDidMount(){
-		this.setState({ albumData: this.props.location.state.albumData });
-    $('#loader').removeClass('hidden');
+		if(this.props.location.state && this.props.location.state.albumData){
+			this.setState({ albumData: this.props.location.state.albumData });
+			this.getAlbumTracks(this.props.location.state.albumData.idAlbum);
+		}
+		else{
+			$('#loader').removeClass('hidden');
+			var albumName = this.props.match.params.album ? this.props.match.params.album.replace(/-/g, ' ') : '';
+			$.ajax({
+				url: 'http://www.theaudiodb.com/api/v1/json/1/searchalbum.php',
+				type: 'GET',
+				data: {s: this.props.match.params.artist, a: albumName},
+				crossOrigin: true
+			}).then((data) => {
+	      	$('#loader').addClass('hidden');
+					this.setState({ albumData: data.album[0] });
+					this.getAlbumTracks(data.album[0].idAlbum);
+				});
+		}
+	}
+
+	getAlbumTracks(albumId){
+		$('#loader').removeClass('hidden');
 		$.ajax({
 			url: 'https://www.theaudiodb.com/api/v1/json/1/track.php',
 			type: 'GET',
-			data: {m: this.props.location.state.albumData.idAlbum},
+			data: {m: albumId},
 			crossOrigin: true
 		}).then((data) => {
       	$('#loader').addClass('hidden');

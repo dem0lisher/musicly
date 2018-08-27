@@ -10,7 +10,7 @@ export default class App extends Component {
   
   constructor(props){
     super(props);
-    this.state = {searchString: '', artistData: [], currentPage: 1, pageSize: 10};
+    this.state = {searchString: '', artistData: [], noResults: false, currentPage: 1, pageSize: 10};
     this.updateSearchString = this.updateSearchString.bind(this);
     this.changePage = this.changePage.bind(this);
     this.getArtistData = this.getArtistData.bind(this);
@@ -36,11 +36,16 @@ export default class App extends Component {
         crossOrigin: true
       }).then((data) => {
           $('#loader').addClass('hidden');
-          this.setState({ artistData: data.artists });
+          if(data.artists){
+            this.setState({ artistData: data.artists, noResults: false });
+          }
+          else{
+            this.setState({ artistData: [], noResults: true });
+          }
         });
     }
     else{
-
+      this.setState({ artistData: [], noResults: false });
     }
   }
 
@@ -55,6 +60,13 @@ export default class App extends Component {
         <div id="artists-container" className="flex-column">
           {artistData}
           <Pagination onChange={this.changePage} showTitle={false} current={this.state.currentPage} pageSize={this.state.pageSize} total={this.state.artistData.length} />
+        </div>
+      );
+    }
+    else if(this.state.artistData && !this.state.artistData.length && this.state.noResults){
+      return(
+        <div id="no-results-cont">
+          Sorry! No Results Found
         </div>
       );
     }
